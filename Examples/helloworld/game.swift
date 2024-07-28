@@ -2,12 +2,13 @@ import _Volatile
 
 typealias GBCoordinate = Int
 typealias GBColor = UInt16
+typealias GBVRAM = UnsafeMutableBufferPointer<UInt16>
 
 @main struct Game {
     static func main() {
         let io = VolatileMappedRegister<UInt32>(unsafeBitPattern: 0x4000000)
 
-        let vram = UnsafeMutableBufferPointer<UInt16>(
+        let vram = GBVRAM(
             start: UnsafeMutablePointer<UInt16>(bitPattern: 0x6000000),
             count: 0xc000
         )
@@ -23,6 +24,24 @@ typealias GBColor = UInt16
         }
 
         drawSmiley(vram, 19, 18, 0xFF, 0xFF, 0xFF)
+
+        var x = 19
+        x += drawLetter(vram, x, 50, UInt8(ascii: "Y"), 0xFF, 0xFF, 0xFF) + 1
+        x += drawLetter(vram, x, 50, UInt8(ascii: "o"), 0xFF, 0xFF, 0xFF) + 1
+        x += drawLetter(vram, x, 50, UInt8(ascii: "u"), 0xFF, 0xFF, 0xFF) + 1
+        x += drawLetter(vram, x, 50, UInt8(ascii: "r"), 0xFF, 0xFF, 0xFF) + 1
+        x += drawLetter(vram, x, 50, UInt8(ascii: " "), 0xFF, 0xFF, 0xFF) + 1
+        x += drawLetter(vram, x, 50, UInt8(ascii: "P"), 0xFF, 0xFF, 0xFF) + 1
+        x += drawLetter(vram, x, 50, UInt8(ascii: "C"), 0xFF, 0xFF, 0xFF) + 1
+        x += drawLetter(vram, x, 50, UInt8(ascii: " "), 0xFF, 0xFF, 0xFF) + 1
+        x += drawLetter(vram, x, 50, UInt8(ascii: "r"), 0xFF, 0xFF, 0xFF) + 1
+        x += drawLetter(vram, x, 50, UInt8(ascii: "a"), 0xFF, 0xFF, 0xFF) + 1
+        x += drawLetter(vram, x, 50, UInt8(ascii: "n"), 0xFF, 0xFF, 0xFF) + 1
+        x += drawLetter(vram, x, 50, UInt8(ascii: " "), 0xFF, 0xFF, 0xFF) + 1
+        x += drawLetter(vram, x, 50, UInt8(ascii: "i"), 0xFF, 0xFF, 0xFF) + 1
+        x += drawLetter(vram, x, 50, UInt8(ascii: "n"), 0xFF, 0xFF, 0xFF) + 1
+        x += drawLetter(vram, x, 50, UInt8(ascii: "t"), 0xFF, 0xFF, 0xFF) + 1
+        x += drawLetter(vram, x, 50, UInt8(ascii: "o"), 0xFF, 0xFF, 0xFF) + 1
 
         drawQrCode(vram, 19, 100, 0xFF, 0xFF, 0xFF)
 
@@ -158,7 +177,7 @@ func drawQrCode(_ vram: UnsafeMutableBufferPointer<UInt16>, _ x: GBCoordinate, _
     drawPixelsHorizontal(vram, (x + 16)...(x + 17), y + 20, r, g, b)
 }
 
-func drawQrCodeTargetSquare(_ vram: UnsafeMutableBufferPointer<UInt16>, _ x: GBCoordinate, _ y: GBCoordinate,  _ r: GBColor, _ g: GBColor, _ b: GBColor) {
+func drawQrCodeTargetSquare(_ vram: GBVRAM, _ x: GBCoordinate, _ y: GBCoordinate,  _ r: GBColor, _ g: GBColor, _ b: GBColor) {
     drawPixelsHorizontal(vram, x...(x + 6), y, r, g, b)
     drawPixelsVertical(vram, x, (y + 1)...(y + 5), r, g, b)
     drawPixelsVertical(vram, x + 6, (y + 1)...(y + 5), r, g, b)
@@ -167,19 +186,146 @@ func drawQrCodeTargetSquare(_ vram: UnsafeMutableBufferPointer<UInt16>, _ x: GBC
     drawPixelsSquare(vram, (x + 2)...(x + 4), (y + 2)...(y + 4), r, g, b)
 }
 
-func drawPixelsVertical(_ vram: UnsafeMutableBufferPointer<UInt16>, _ x: GBCoordinate, _ yRange : ClosedRange<GBCoordinate>, _ red: GBColor, _ green: GBColor, _ blue: GBColor) {
+func drawLetter(_ vram: GBVRAM, _ x: GBCoordinate, _ y: GBCoordinate, _ letter: UInt8,  _ r: GBColor, _ g: GBColor, _ b: GBColor) -> Int {
+    switch (letter) {
+        case UInt8(ascii: " "):
+            return 4
+
+        case UInt8(ascii: "C"):
+            drawPixel(vram, x + 1, y, r, g, b)
+            drawPixel(vram, x + 2, y, r, g, b)
+            drawPixel(vram, x + 3, y, r, g, b)
+            drawPixel(vram, x, y + 1, r, g, b)
+            drawPixel(vram, x + 4, y + 1, r, g, b)
+            drawPixel(vram, x, y + 2, r, g, b)
+            drawPixel(vram, x, y + 3, r, g, b)
+            drawPixel(vram, x + 4, y + 3, r, g, b)
+            drawPixel(vram, x + 1, y + 4, r, g, b)
+            drawPixel(vram, x + 2, y + 4, r, g, b)
+            drawPixel(vram, x + 3, y + 4, r, g, b)
+            return 5
+
+        case UInt8(ascii: "P"):
+            drawPixel(vram, x, y, r, g, b)
+            drawPixel(vram, x + 1, y, r, g, b)
+            drawPixel(vram, x + 2, y, r, g, b)
+            drawPixel(vram, x + 3, y, r, g, b)
+            drawPixel(vram, x, y + 1, r, g, b)
+            drawPixel(vram, x + 4, y + 1, r, g, b)
+            drawPixel(vram, x, y + 2, r, g, b)
+            drawPixel(vram, x + 1, y + 2, r, g, b)
+            drawPixel(vram, x + 2, y + 2, r, g, b)
+            drawPixel(vram, x + 3, y + 2, r, g, b)
+            drawPixel(vram, x, y + 3, r, g, b)
+            drawPixel(vram, x, y + 4, r, g, b)
+            return 5
+
+        case UInt8(ascii: "Y"):
+            drawPixel(vram, x, y, r, g, b)
+            drawPixel(vram, x + 4, y, r, g, b)
+            drawPixel(vram, x + 1, y + 1, r, g, b)
+            drawPixel(vram, x + 3, y + 1, r, g, b)
+            drawPixel(vram, x + 2, y + 2, r, g, b)
+            drawPixel(vram, x + 2, y + 3, r, g, b)
+            drawPixel(vram, x + 2, y + 4, r, g, b)
+            return 5
+
+        case UInt8(ascii: "a"):
+            drawPixel(vram, x, y, r, g, b)
+            drawPixel(vram, x + 1, y, r, g, b)
+            drawPixel(vram, x + 2, y, r, g, b)
+            drawPixel(vram, x + 3, y + 1, r, g, b)
+            drawPixel(vram, x + 1, y + 2, r, g, b)
+            drawPixel(vram, x + 2, y + 2, r, g, b)
+            drawPixel(vram, x + 3, y + 2, r, g, b)
+            drawPixel(vram, x, y + 3, r, g, b)
+            drawPixel(vram, x + 3, y + 3, r, g, b)
+            drawPixel(vram, x + 1, y + 4, r, g, b)
+            drawPixel(vram, x + 2, y + 4, r, g, b)
+            drawPixel(vram, x + 3, y + 4, r, g, b)
+            return 4
+
+        case UInt8(ascii: "i"):
+            drawPixel(vram, x, y, r, g, b)
+            drawPixel(vram, x, y + 2, r, g, b)
+            drawPixel(vram, x, y + 3, r, g, b)
+            drawPixel(vram, x, y + 4, r, g, b)
+            return 1
+
+        case UInt8(ascii: "n"):
+            drawPixel(vram, x, y + 1, r, g, b)
+            drawPixel(vram, x + 1, y + 1, r, g, b)
+            drawPixel(vram, x + 2, y + 1, r, g, b)
+            drawPixel(vram, x, y + 2, r, g, b)
+            drawPixel(vram, x + 3, y + 2, r, g, b)
+            drawPixel(vram, x, y + 3, r, g, b)
+            drawPixel(vram, x + 3, y + 3, r, g, b)
+            drawPixel(vram, x, y + 4, r, g, b)
+            drawPixel(vram, x + 3, y + 4, r, g, b)
+            return 4
+
+        case UInt8(ascii: "o"):
+            drawPixel(vram, x + 1, y + 1, r, g, b)
+            drawPixel(vram, x + 2, y + 1, r, g, b)
+            drawPixel(vram, x, y + 2, r, g, b)
+            drawPixel(vram, x + 3, y + 2, r, g, b)
+            drawPixel(vram, x, y + 3, r, g, b)
+            drawPixel(vram, x + 3, y + 3, r, g, b)
+            drawPixel(vram, x + 1, y + 4, r, g, b)
+            drawPixel(vram, x + 2, y + 4, r, g, b)
+            return 4
+
+        case UInt8(ascii: "r"):
+            drawPixel(vram, x, y + 1, r, g, b)
+            drawPixel(vram, x + 2, y + 1, r, g, b)
+            drawPixel(vram, x, y + 2, r, g, b)
+            drawPixel(vram, x + 1, y + 2, r, g, b)
+            drawPixel(vram, x + 3, y + 2, r, g, b)
+            drawPixel(vram, x, y + 3, r, g, b)
+            drawPixel(vram, x, y + 4, r, g, b)
+            return 4
+
+        case UInt8(ascii: "t"):
+            drawPixel(vram, x + 1, y, r, g, b)
+            drawPixel(vram, x, y + 1, r, g, b)
+            drawPixel(vram, x + 1, y + 1, r, g, b)
+            drawPixel(vram, x + 2, y + 1, r, g, b)
+            drawPixel(vram, x + 1, y + 2, r, g, b)
+            drawPixel(vram, x + 1, y + 3, r, g, b)
+            drawPixel(vram, x + 2, y + 4, r, g, b)
+            return 3
+
+        case UInt8(ascii: "u"):
+            drawPixel(vram, x, y + 1, r, g, b)
+            drawPixel(vram, x + 3, y + 1, r, g, b)
+            drawPixel(vram, x, y + 2, r, g, b)
+            drawPixel(vram, x + 3, y + 2, r, g, b)
+            drawPixel(vram, x, y + 3, r, g, b)
+            drawPixel(vram, x + 3, y + 3, r, g, b)
+            drawPixel(vram, x + 1, y + 4, r, g, b)
+            drawPixel(vram, x + 2, y + 4, r, g, b)
+            drawPixel(vram, x + 3, y + 4, r, g, b)
+            return 4
+
+        default:
+            // do nothing
+            return 0
+    }
+}
+
+func drawPixelsVertical(_ vram: GBVRAM, _ x: GBCoordinate, _ yRange : ClosedRange<GBCoordinate>, _ red: GBColor, _ green: GBColor, _ blue: GBColor) {
     for y in yRange {
         drawPixel(vram, x, y, red, blue, green)
     }
 }
 
-func drawPixelsHorizontal(_ vram: UnsafeMutableBufferPointer<UInt16>, _ xRange: ClosedRange<GBCoordinate>, _ y: GBCoordinate, _ red: GBColor, _ green: GBColor, _ blue: GBColor) {
+func drawPixelsHorizontal(_ vram: GBVRAM, _ xRange: ClosedRange<GBCoordinate>, _ y: GBCoordinate, _ red: GBColor, _ green: GBColor, _ blue: GBColor) {
     for x in xRange {
         drawPixel(vram, x, y, red, blue, green)
     }
 }
 
-func drawPixelsSquare(_ vram: UnsafeMutableBufferPointer<UInt16>, _ xRange: ClosedRange<GBCoordinate>, _ yRange : ClosedRange<GBCoordinate>, _ red: GBColor, _ green: GBColor, _ blue: GBColor) {
+func drawPixelsSquare(_ vram: GBVRAM, _ xRange: ClosedRange<GBCoordinate>, _ yRange : ClosedRange<GBCoordinate>, _ red: GBColor, _ green: GBColor, _ blue: GBColor) {
     for x in xRange {
         for y in yRange {
             drawPixel(vram, x, y, red, blue, green)
@@ -187,7 +333,7 @@ func drawPixelsSquare(_ vram: UnsafeMutableBufferPointer<UInt16>, _ xRange: Clos
     }
 }
 
-func drawPixel(_ vram: UnsafeMutableBufferPointer<UInt16>, _ x: GBCoordinate, _ y: GBCoordinate, _ red: GBColor, _ green: GBColor, _ blue: GBColor) {
+func drawPixel(_ vram: GBVRAM, _ x: GBCoordinate, _ y: GBCoordinate, _ red: GBColor, _ green: GBColor, _ blue: GBColor) {
     let redValue = UInt16(Float(red) / 255 * 31) & 0x1F
     let greenValue = UInt16(Float(green) / 255 * 31) & 0x1F
     let blueValue = UInt16(Float(blue) / 255 * 31) & 0x1F
