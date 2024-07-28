@@ -167,22 +167,19 @@ func drawQrCodeTargetSquare(_ vram: UnsafeMutableBufferPointer<UInt16>, _ x: GBC
     drawPixelsSquare(vram, (x + 2)...(x + 4), (y + 2)...(y + 4), r, g, b)
 }
 
-func drawPixelsVertical(_ vram: UnsafeMutableBufferPointer<UInt16>, _ x: GBCoordinate, _ yRange : ClosedRange<GBCoordinate>, _ red: GBColor, _ green: GBColor, _ blue: GBColor)
-{
+func drawPixelsVertical(_ vram: UnsafeMutableBufferPointer<UInt16>, _ x: GBCoordinate, _ yRange : ClosedRange<GBCoordinate>, _ red: GBColor, _ green: GBColor, _ blue: GBColor) {
     for y in yRange {
         drawPixel(vram, x, y, red, blue, green)
     }
 }
 
-func drawPixelsHorizontal(_ vram: UnsafeMutableBufferPointer<UInt16>, _ xRange: ClosedRange<GBCoordinate>, _ y: GBCoordinate, _ red: GBColor, _ green: GBColor, _ blue: GBColor)
-{
+func drawPixelsHorizontal(_ vram: UnsafeMutableBufferPointer<UInt16>, _ xRange: ClosedRange<GBCoordinate>, _ y: GBCoordinate, _ red: GBColor, _ green: GBColor, _ blue: GBColor) {
     for x in xRange {
         drawPixel(vram, x, y, red, blue, green)
     }
 }
 
-func drawPixelsSquare(_ vram: UnsafeMutableBufferPointer<UInt16>, _ xRange: ClosedRange<GBCoordinate>, _ yRange : ClosedRange<GBCoordinate>, _ red: GBColor, _ green: GBColor, _ blue: GBColor)
-{
+func drawPixelsSquare(_ vram: UnsafeMutableBufferPointer<UInt16>, _ xRange: ClosedRange<GBCoordinate>, _ yRange : ClosedRange<GBCoordinate>, _ red: GBColor, _ green: GBColor, _ blue: GBColor) {
     for x in xRange {
         for y in yRange {
             drawPixel(vram, x, y, red, blue, green)
@@ -190,8 +187,7 @@ func drawPixelsSquare(_ vram: UnsafeMutableBufferPointer<UInt16>, _ xRange: Clos
     }
 }
 
-func drawPixel(_ vram: UnsafeMutableBufferPointer<UInt16>, _ x: GBCoordinate, _ y: GBCoordinate, _ red: GBColor, _ green: GBColor, _ blue: GBColor)
-{
+func drawPixel(_ vram: UnsafeMutableBufferPointer<UInt16>, _ x: GBCoordinate, _ y: GBCoordinate, _ red: GBColor, _ green: GBColor, _ blue: GBColor) {
     let redValue = UInt16(Float(red) / 255 * 31) & 0x1F
     let greenValue = UInt16(Float(green) / 255 * 31) & 0x1F
     let blueValue = UInt16(Float(blue) / 255 * 31) & 0x1F
