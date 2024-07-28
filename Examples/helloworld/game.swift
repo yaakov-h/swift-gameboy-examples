@@ -1,5 +1,8 @@
 import _Volatile
 
+typealias GBCoordinate = Int
+typealias GBColor = UInt16
+
 @main struct Game {
     static func main() {
         let io = VolatileMappedRegister<UInt32>(unsafeBitPattern: 0x4000000)
@@ -15,15 +18,186 @@ import _Volatile
         // Draw a gradient
         for x in 0..<240 {
             for y in 0..<160 {
-                let red = UInt16(x * 31 / 239)
-                let blue = UInt16(y * 31 / 159)
-                let color = red | (blue << 10)
-                vram[x + y * 240] = color
+                drawPixel(vram, x, y, 0x00, 0x78, 0xD7)
             }
         }
 
+        drawSmiley(vram, 19, 18, 0xFF, 0xFF, 0xFF)
+
+        drawQrCode(vram, 19, 100, 0xFF, 0xFF, 0xFF)
+
         while true {}
     }
+}
+
+func drawSmiley(_ vram: UnsafeMutableBufferPointer<UInt16>, _ x: GBCoordinate, _ y: GBCoordinate,  _ red: GBColor, _ green: GBColor, _ blue: GBColor) {
+        drawPixelsSquare(vram, x...(x + 2), (y + 5)...(y + 7), red, green, blue)
+        drawPixelsSquare(vram, x...(x + 2), 40...42, red, green, blue)
+
+        drawPixelsVertical(vram, x + 8, (y + 9)...(y + 20), red, green, blue)
+        drawPixelsVertical(vram, x + 9, (y + 6)...(y + 23), red, green, blue)
+
+        drawPixelsVertical(vram, x + 10, (y + 4)...(y + 8), red, green, blue)
+        drawPixelsVertical(vram, x + 10, (y + 21)...(y + 25), red, green, blue)
+
+        drawPixelsVertical(vram, x + 11, (y + 2)...(y + 5), red, green, blue)
+        drawPixelsVertical(vram, x + 11, (y + 24)...(y + 27), red, green, blue)
+
+        drawPixelsVertical(vram, x + 12, (y + 1)...(y + 2), red, green, blue)
+        drawPixelsVertical(vram, x + 12, (y + 27)...(y + 28), red, green, blue)
+
+        drawPixelsVertical(vram, x + 13, y...(y + 1), red, green, blue)
+        drawPixelsVertical(vram, x + 13, (y + 28)...(y + 29), red, green, blue)
+}
+
+func drawQrCode(_ vram: UnsafeMutableBufferPointer<UInt16>, _ x: GBCoordinate, _ y: GBCoordinate,  _ r: GBColor, _ g: GBColor, _ b: GBColor) {
+    drawQrCodeTargetSquare(vram, x, y, r, g, b)
+    drawQrCodeTargetSquare(vram, x, y + 14, r, g, b)
+    drawQrCodeTargetSquare(vram, x + 14, y, r, g, b)
+
+    drawPixel(vram, x + 8, y, r, g, b)
+    drawPixel(vram, x + 9, y, r, g, b)
+    drawPixel(vram, x + 9, y + 1, r, g, b)
+    drawPixel(vram, x + 8, y + 2, r, g, b)
+    drawPixel(vram, x + 9, y + 2, r, g, b)
+    drawPixel(vram, x + 10, y + 2, r, g, b)
+    drawPixel(vram, x + 12, y + 2, r, g, b)
+    drawPixel(vram, x + 8, y + 3, r, g, b)
+    drawPixel(vram, x + 10, y + 3, r, g, b)
+    drawPixel(vram, x + 11, y + 3, r, g, b)
+    drawPixel(vram, x + 8, y + 4, r, g, b)
+    drawPixel(vram, x + 9, y + 4, r, g, b) 
+    drawPixel(vram, x + 11, y + 4, r, g, b)
+    drawPixel(vram, x + 12, y + 4, r, g, b)
+    drawPixel(vram, x + 9, y + 5, r, g, b)
+    drawPixel(vram, x + 10, y + 5, r, g, b)
+    drawPixel(vram, x + 8, y + 6, r, g, b)
+    drawPixel(vram, x + 10, y + 6, r, g, b)
+    drawPixel(vram, x + 12, y + 6, r, g, b)
+    drawPixel(vram, x + 11, y + 7, r, g, b)
+    drawPixel(vram, x + 12, y + 7, r, g, b)
+
+    drawPixel(vram, x, y + 8, r, g, b)
+    drawPixel(vram, x + 1, y + 8, r, g, b)
+    drawPixel(vram, x + 2, y + 8, r, g, b)
+    drawPixel(vram, x + 3, y + 8, r, g, b)
+    drawPixel(vram, x + 6, y + 8, r, g, b)
+    drawPixel(vram, x + 8, y + 8, r, g, b)
+    drawPixel(vram, x + 10, y + 8, r, g, b)
+    drawPixel(vram, x + 11, y + 8, r, g, b)
+    drawPixel(vram, x + 13, y + 8, r, g, b)
+    drawPixel(vram, x + 16, y + 8, r, g, b)
+    drawPixel(vram, x + 17, y + 8, r, g, b)
+    drawPixel(vram, x + 18, y + 8, r, g, b)
+    drawPixel(vram, x + 20, y + 8, r, g, b)
+
+    drawPixel(vram, x, y + 9, r, g, b)
+    drawPixel(vram, x + 1, y + 9, r, g, b)
+    drawPixel(vram, x + 2, y + 9, r, g, b)
+    drawPixel(vram, x + 5, y + 9, r, g, b)
+    drawPixel(vram, x + 11, y + 9, r, g, b)
+    drawPixelsHorizontal(vram, (x + 13)...(x + 21), y + 9, r, g, b)
+
+    drawPixel(vram, x, y + 10, r, g, b)
+    drawPixelsHorizontal(vram, (x + 4)...(x + 8), y + 10, r, g, b)
+    drawPixel(vram, x + 10, y + 10, r, g, b)
+    drawPixel(vram, x + 13, y + 10, r, g, b)
+    drawPixel(vram, x + 17, y + 10, r, g, b)
+    drawPixel(vram, x + 19, y + 10, r, g, b)
+    drawPixel(vram, x + 20, y + 10, r, g, b)
+
+    drawPixel(vram, x + 2, y + 11, r, g, b)
+    drawPixel(vram, x + 4, y + 11, r, g, b)
+    drawPixelsHorizontal(vram, (x + 9)...(x + 12), y + 11, r, g, b)
+    drawPixel(vram, x + 15, y + 11, r, g, b)
+    drawPixel(vram, x + 17, y + 11, r, g, b)
+    drawPixel(vram, x + 19, y + 11, r, g, b)
+
+    drawPixel(vram, x + 1, y + 12, r, g, b)
+    drawPixel(vram, x + 3, y + 12, r, g, b)
+    drawPixel(vram, x + 5, y + 12, r, g, b)
+    drawPixel(vram, x + 6, y + 12, r, g, b)
+    drawPixelsHorizontal(vram, (x + 9)...(x + 11), y + 12, r, g, b)
+    drawPixelsHorizontal(vram, (x + 13)...(x + 14), y + 12, r, g, b)
+    drawPixelsHorizontal(vram, (x + 16)...(x + 17), y + 12, r, g, b)
+    drawPixel(vram, x + 20, y + 12, r, g, b)
+
+    drawPixel(vram, x + 8, y + 13, r, g, b)
+    drawPixelsHorizontal(vram, (x + 11)...(x + 12), y + 13, r, g, b)
+    drawPixel(vram, x + 16, y + 13, r, g, b)
+
+    drawPixel(vram, x + 11, y + 14, r, g, b)
+    drawPixel(vram, x + 16, y + 14, r, g, b)
+
+    drawPixel(vram, x + 11, y + 15, r, g, b)
+    drawPixel(vram, x + 13, y + 15, r, g, b)
+    drawPixelsHorizontal(vram, (x + 15)...(x + 19), y + 15, r, g, b)
+
+    drawPixelsHorizontal(vram, (x + 9)...(x + 12), y + 16, r, g, b)
+    drawPixel(vram, x + 16, y + 16, r, g, b)
+    drawPixel(vram, x + 18, y + 16, r, g, b)
+    drawPixel(vram, x + 20, y + 16, r, g, b)
+
+    drawPixel(vram, x + 8, y + 17, r, g, b)
+    drawPixel(vram, x + 10, y + 17, r, g, b)
+    drawPixelsHorizontal(vram, (x + 12)...(x + 13), y + 17, r, g, b)
+    drawPixel(vram, x + 15, y + 17, r, g, b)
+
+    drawPixel(vram, x + 8, y + 18, r, g, b)
+    drawPixelsHorizontal(vram, (x + 11)...(x + 13), y + 18, r, g, b)
+    drawPixel(vram, x + 15, y + 18, r, g, b)
+    drawPixel(vram, x + 18, y + 18, r, g, b)
+
+    drawPixelsHorizontal(vram, (x + 8)...(x + 10), y + 19, r, g, b)
+    drawPixelsHorizontal(vram, (x + 13)...(x + 16), y + 19, r, g, b)
+    drawPixel(vram, x + 20, y + 19, r, g, b)
+
+    drawPixel(vram, x + 8, y + 20, r, g, b)
+    drawPixel(vram, x + 10, y + 20, r, g, b)
+    drawPixelsHorizontal(vram, (x + 13)...(x + 14), y + 20, r, g, b)
+    drawPixelsHorizontal(vram, (x + 16)...(x + 17), y + 20, r, g, b)
+}
+
+func drawQrCodeTargetSquare(_ vram: UnsafeMutableBufferPointer<UInt16>, _ x: GBCoordinate, _ y: GBCoordinate,  _ r: GBColor, _ g: GBColor, _ b: GBColor) {
+    drawPixelsHorizontal(vram, x...(x + 6), y, r, g, b)
+    drawPixelsVertical(vram, x, (y + 1)...(y + 5), r, g, b)
+    drawPixelsVertical(vram, x + 6, (y + 1)...(y + 5), r, g, b)
+    drawPixelsHorizontal(vram, x...(x + 6), y + 6, r, g, b)
+
+    drawPixelsSquare(vram, (x + 2)...(x + 4), (y + 2)...(y + 4), r, g, b)
+}
+
+func drawPixelsVertical(_ vram: UnsafeMutableBufferPointer<UInt16>, _ x: GBCoordinate, _ yRange : ClosedRange<GBCoordinate>, _ red: GBColor, _ green: GBColor, _ blue: GBColor)
+{
+    for y in yRange {
+        drawPixel(vram, x, y, red, blue, green)
+    }
+}
+
+func drawPixelsHorizontal(_ vram: UnsafeMutableBufferPointer<UInt16>, _ xRange: ClosedRange<GBCoordinate>, _ y: GBCoordinate, _ red: GBColor, _ green: GBColor, _ blue: GBColor)
+{
+    for x in xRange {
+        drawPixel(vram, x, y, red, blue, green)
+    }
+}
+
+func drawPixelsSquare(_ vram: UnsafeMutableBufferPointer<UInt16>, _ xRange: ClosedRange<GBCoordinate>, _ yRange : ClosedRange<GBCoordinate>, _ red: GBColor, _ green: GBColor, _ blue: GBColor)
+{
+    for x in xRange {
+        for y in yRange {
+            drawPixel(vram, x, y, red, blue, green)
+        }
+    }
+}
+
+func drawPixel(_ vram: UnsafeMutableBufferPointer<UInt16>, _ x: GBCoordinate, _ y: GBCoordinate, _ red: GBColor, _ green: GBColor, _ blue: GBColor)
+{
+    let redValue = UInt16(Float(red) / 255 * 31) & 0x1F
+    let greenValue = UInt16(Float(green) / 255 * 31) & 0x1F
+    let blueValue = UInt16(Float(blue) / 255 * 31) & 0x1F
+
+    let color = redValue | (greenValue << 5) | (blueValue << 10)
+    vram[x + y * 240] = color;
 }
 
 @_cdecl("__atomic_load_4")
