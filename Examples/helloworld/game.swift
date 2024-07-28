@@ -25,6 +25,10 @@ typealias GBVRAM = UnsafeMutableBufferPointer<UInt16>
 
         drawSmiley(vram, 16, 18, 0xFF, 0xFF, 0xFF)
         drawText(vram, 16, 50, "Your PC ran into a problem and needs to restart.", 0xFF, 0xFF, 0xFF)
+        drawText(vram, 16, 57, "We're just collecting some error info, and then we'll", 0xFF, 0xFF, 0xFF)
+        drawText(vram, 16, 64, "restart for you.", 0xFF, 0xFF, 0xFF)
+
+        drawText(vram, 16, 75, "18% complete", 0xFF, 0xFF, 0xFF)
 
         drawQrCode(vram, 16, 100, 0xFF, 0xFF, 0xFF)
 
@@ -191,6 +195,29 @@ func drawLetter(_ vram: GBVRAM, _ x: GBCoordinate, _ y: GBCoordinate, _ letter: 
             drawPixel(vram, x + 1, y + 4, r, g, b)
             return 2
 
+        case UInt8(ascii: "'"):
+            drawPixel(vram, x, y, r, g, b)
+            drawPixel(vram, x, y + 1, r, g, b)
+            return 1
+
+        case UInt8(ascii: "/"):
+            drawPixel(vram, x + 2, y, r, g, b)
+            drawPixel(vram, x + 2, y + 1, r, g, b)
+            drawPixel(vram, x + 1, y + 2, r, g, b)
+            drawPixel(vram, x, y + 3, r, g, b)
+            drawPixel(vram, x, y + 4, r, g, b)
+            return 4
+
+        case UInt8(ascii: "%"):
+            drawPixel(vram, x, y, r, g, b)
+            drawPixel(vram, x + 2, y, r, g, b)
+            drawPixel(vram, x + 2, y + 1, r, g, b)
+            drawPixel(vram, x + 1, y + 2, r, g, b)
+            drawPixel(vram, x, y + 3, r, g, b)
+            drawPixel(vram, x, y + 4, r, g, b)
+            drawPixel(vram, x + 2, y + 4, r, g, b)
+            return 4
+
         case UInt8(ascii: "C"):
             drawPixel(vram, x + 1, y, r, g, b)
             drawPixel(vram, x + 2, y, r, g, b)
@@ -218,6 +245,23 @@ func drawLetter(_ vram: GBVRAM, _ x: GBCoordinate, _ y: GBCoordinate, _ letter: 
             drawPixel(vram, x + 3, y + 2, r, g, b)
             drawPixel(vram, x, y + 3, r, g, b)
             drawPixel(vram, x, y + 4, r, g, b)
+            return 5
+
+        case UInt8(ascii: "W"):
+            drawPixel(vram, x, y, r, g, b)
+            drawPixel(vram, x + 2, y, r, g, b)
+            drawPixel(vram, x + 4, y, r, g, b)
+            drawPixel(vram, x, y + 1, r, g, b)
+            drawPixel(vram, x + 2, y + 1, r, g, b)
+            drawPixel(vram, x + 4, y + 1, r, g, b)
+            drawPixel(vram, x, y + 2, r, g, b)
+            drawPixel(vram, x + 2, y + 2, r, g, b)
+            drawPixel(vram, x + 4, y + 2, r, g, b)
+            drawPixel(vram, x, y + 3, r, g, b)
+            drawPixel(vram, x + 2, y + 3, r, g, b)
+            drawPixel(vram, x + 4, y + 3, r, g, b)
+            drawPixel(vram, x + 1, y + 4, r, g, b)
+            drawPixel(vram, x + 3, y + 4, r, g, b)
             return 5
 
         case UInt8(ascii: "Y"):
@@ -259,6 +303,15 @@ func drawLetter(_ vram: GBVRAM, _ x: GBCoordinate, _ y: GBCoordinate, _ letter: 
             drawPixel(vram, x + 2, y + 4, r, g, b)
             return 4
 
+        case UInt8(ascii: "c"):
+            drawPixel(vram, x + 1, y + 1, r, g, b)
+            drawPixel(vram, x + 2, y + 1, r, g, b)
+            drawPixel(vram, x, y + 2, r, g, b)
+            drawPixel(vram, x, y + 3, r, g, b)
+            drawPixel(vram, x + 1, y + 4, r, g, b)
+            drawPixel(vram, x + 2, y + 4, r, g, b)
+            return 3
+
         case UInt8(ascii: "d"):
             drawPixel(vram, x + 3, y - 1, r, g, b)
             drawPixel(vram, x + 3, y, r, g, b)
@@ -288,12 +341,61 @@ func drawLetter(_ vram: GBVRAM, _ x: GBCoordinate, _ y: GBCoordinate, _ letter: 
             drawPixel(vram, x + 3, y + 4, r, g, b)
             return 4
 
+        case UInt8(ascii: "f"):
+            drawPixel(vram, x + 2, y, r, g, b)
+            drawPixel(vram, x + 3, y, r, g, b)
+            drawPixel(vram, x + 1, y + 1, r, g, b)
+            drawPixel(vram, x, y + 2, r, g, b)
+            drawPixel(vram, x + 1, y + 2, r, g, b)
+            drawPixel(vram, x + 2, y + 2, r, g, b)
+            drawPixel(vram, x + 3, y + 2, r, g, b)
+            drawPixel(vram, x + 1, y + 3, r, g, b)
+            drawPixel(vram, x + 1, y + 4, r, g, b)
+            return 4
+
+        case UInt8(ascii: "g"):
+            drawPixel(vram, x + 1, y + 1, r, g, b)
+            drawPixel(vram, x + 2, y + 1, r, g, b)
+            drawPixel(vram, x, y + 2, r, g, b)
+            drawPixel(vram, x + 3, y + 2, r, g, b)
+            drawPixel(vram, x, y + 3, r, g, b)
+            drawPixel(vram, x + 3, y + 3, r, g, b)
+            drawPixel(vram, x + 1, y + 4, r, g, b)
+            drawPixel(vram, x + 2, y + 4, r, g, b)
+            drawPixel(vram, x + 3, y + 4, r, g, b)
+            drawPixel(vram, x + 3, y + 5, r, g, b)
+            drawPixel(vram, x + 1, y + 6, r, g, b)
+            drawPixel(vram, x + 2, y + 6, r, g, b)
+            return 4
+
+        case UInt8(ascii: "h"):
+            drawPixel(vram, x, y - 1, r, g, b)
+            drawPixel(vram, x, y, r, g, b)
+            drawPixel(vram, x, y + 1, r, g, b)
+            drawPixel(vram, x + 1, y + 1, r, g, b)
+            drawPixel(vram, x + 2, y + 1, r, g, b)
+            drawPixel(vram, x, y + 2, r, g, b)
+            drawPixel(vram, x + 3, y + 2, r, g, b)
+            drawPixel(vram, x, y + 3, r, g, b)
+            drawPixel(vram, x + 3, y + 3, r, g, b)
+            drawPixel(vram, x, y + 4, r, g, b)
+            drawPixel(vram, x + 3, y + 4, r, g, b)
+            return 4
+
         case UInt8(ascii: "i"):
             drawPixel(vram, x, y, r, g, b)
             drawPixel(vram, x, y + 2, r, g, b)
             drawPixel(vram, x, y + 3, r, g, b)
             drawPixel(vram, x, y + 4, r, g, b)
             return 1
+
+        case UInt8(ascii: "j"):
+            drawPixel(vram, x + 1, y, r, g, b)
+            drawPixel(vram, x + 1, y + 2, r, g, b)
+            drawPixel(vram, x + 1, y + 3, r, g, b)
+            drawPixel(vram, x, y + 4, r, g, b)
+            drawPixel(vram, x + 1, y + 4, r, g, b)
+            return 2
 
         case UInt8(ascii: "m"):
             drawPixel(vram, x, y + 1, r, g, b)
@@ -396,6 +498,59 @@ func drawLetter(_ vram: GBVRAM, _ x: GBCoordinate, _ y: GBCoordinate, _ letter: 
             drawPixel(vram, x + 1, y + 4, r, g, b)
             drawPixel(vram, x + 2, y + 4, r, g, b)
             drawPixel(vram, x + 3, y + 4, r, g, b)
+            return 4
+
+        case UInt8(ascii: "w"):
+            drawPixel(vram, x, y + 2, r, g, b)
+            drawPixel(vram, x + 2, y + 2, r, g, b)
+            drawPixel(vram, x + 4, y + 2, r, g, b)
+            drawPixel(vram, x, y + 3, r, g, b)
+            drawPixel(vram, x + 2, y + 3, r, g, b)
+            drawPixel(vram, x + 4, y + 3, r, g, b)
+            drawPixel(vram, x + 1, y + 4, r, g, b)
+            drawPixel(vram, x + 2, y + 4, r, g, b)
+            drawPixel(vram, x + 3, y + 4, r, g, b)
+            drawPixel(vram, x + 4, y + 4, r, g, b)
+            return 6
+
+        case UInt8(ascii: "y"):
+            drawPixel(vram, x, y + 1, r, g, b)
+            drawPixel(vram, x + 3, y + 1, r, g, b)
+            drawPixel(vram, x, y + 2, r, g, b)
+            drawPixel(vram, x + 3, y + 2, r, g, b)
+            drawPixel(vram, x, y + 3, r, g, b)
+            drawPixel(vram, x + 3, y + 3, r, g, b)
+            drawPixel(vram, x + 1, y + 4, r, g, b)
+            drawPixel(vram, x + 2, y + 4, r, g, b)
+            drawPixel(vram, x + 3, y + 4, r, g, b)
+            drawPixel(vram, x + 3, y + 5, r, g, b)
+            drawPixel(vram, x + 1, y + 6, r, g, b)
+            drawPixel(vram, x + 2, y + 6, r, g, b)
+            return 4
+
+
+        case UInt8(ascii: "1"):
+            drawPixel(vram, x + 1, y, r, g, b)
+            drawPixel(vram, x, y + 1, r, g, b)
+            drawPixel(vram, x + 1, y + 1, r, g, b)
+            drawPixel(vram, x + 1, y + 2, r, g, b)
+            drawPixel(vram, x + 1, y + 3, r, g, b)
+            drawPixel(vram, x, y + 4, r, g, b)
+            drawPixel(vram, x + 1, y + 4, r, g, b)
+            drawPixel(vram, x + 2, y + 4, r, g, b)
+            return 3
+
+        case UInt8(ascii: "8"):
+            drawPixel(vram, x + 1, y, r, g, b)
+            drawPixel(vram, x + 2, y, r, g, b)
+            drawPixel(vram, x, y + 1, r, g, b)
+            drawPixel(vram, x + 3, y + 1, r, g, b)
+            drawPixel(vram, x + 1, y + 2, r, g, b)
+            drawPixel(vram, x + 2, y + 2, r, g, b)
+            drawPixel(vram, x, y + 3, r, g, b)
+            drawPixel(vram, x + 3, y + 3, r, g, b)
+            drawPixel(vram, x + 1, y + 4, r, g, b)
+            drawPixel(vram, x + 2, y + 4, r, g, b)
             return 4
 
         default:
