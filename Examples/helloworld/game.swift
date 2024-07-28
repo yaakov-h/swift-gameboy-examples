@@ -24,28 +24,21 @@ typealias GBVRAM = UnsafeMutableBufferPointer<UInt16>
         }
 
         drawSmiley(vram, 19, 18, 0xFF, 0xFF, 0xFF)
-
-        var x = 19
-        x += drawLetter(vram, x, 50, UInt8(ascii: "Y"), 0xFF, 0xFF, 0xFF) + 1
-        x += drawLetter(vram, x, 50, UInt8(ascii: "o"), 0xFF, 0xFF, 0xFF) + 1
-        x += drawLetter(vram, x, 50, UInt8(ascii: "u"), 0xFF, 0xFF, 0xFF) + 1
-        x += drawLetter(vram, x, 50, UInt8(ascii: "r"), 0xFF, 0xFF, 0xFF) + 1
-        x += drawLetter(vram, x, 50, UInt8(ascii: " "), 0xFF, 0xFF, 0xFF) + 1
-        x += drawLetter(vram, x, 50, UInt8(ascii: "P"), 0xFF, 0xFF, 0xFF) + 1
-        x += drawLetter(vram, x, 50, UInt8(ascii: "C"), 0xFF, 0xFF, 0xFF) + 1
-        x += drawLetter(vram, x, 50, UInt8(ascii: " "), 0xFF, 0xFF, 0xFF) + 1
-        x += drawLetter(vram, x, 50, UInt8(ascii: "r"), 0xFF, 0xFF, 0xFF) + 1
-        x += drawLetter(vram, x, 50, UInt8(ascii: "a"), 0xFF, 0xFF, 0xFF) + 1
-        x += drawLetter(vram, x, 50, UInt8(ascii: "n"), 0xFF, 0xFF, 0xFF) + 1
-        x += drawLetter(vram, x, 50, UInt8(ascii: " "), 0xFF, 0xFF, 0xFF) + 1
-        x += drawLetter(vram, x, 50, UInt8(ascii: "i"), 0xFF, 0xFF, 0xFF) + 1
-        x += drawLetter(vram, x, 50, UInt8(ascii: "n"), 0xFF, 0xFF, 0xFF) + 1
-        x += drawLetter(vram, x, 50, UInt8(ascii: "t"), 0xFF, 0xFF, 0xFF) + 1
-        x += drawLetter(vram, x, 50, UInt8(ascii: "o"), 0xFF, 0xFF, 0xFF) + 1
+        drawText(vram, 19, 50, "Your PC ran into", 0xFF, 0xFF, 0xFF)
 
         drawQrCode(vram, 19, 100, 0xFF, 0xFF, 0xFF)
 
         while true {}
+    }
+}
+
+func drawText(_ vram: GBVRAM, _ x: GBCoordinate, _ y: GBCoordinate, _ text: String, _ red: GBColor, _ green: GBColor, _ blue: GBColor) {
+    var offset = 0
+
+    for letter in text.unicodeScalars {
+        let value = UInt8(ascii: letter)
+        offset += drawLetter(vram, x + offset, y, value, red, green, blue)
+        offset += 1
     }
 }
 
